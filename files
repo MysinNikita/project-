@@ -1,0 +1,321 @@
+import os
+import shutil
+import time #для ожидания sleep перед завершением работы программы
+
+class file: #объявляем класс file для того, чтобы работать с файлами
+
+    memory = 1024*1024*1024 #размер буфера в байтах
+    
+    def size(path):
+        if file.isFile(path):
+            return os.path.getsize(path)
+        else:
+            size = 0
+            for subdir, dirs, files in os.walk(path): #здесь и далее, везде где есть строка с os.walk - там перебор всех папок и файлов в родительской папке path
+                for f in files:
+                    fp = os.path.join(subdir, f) #тоже самое, как и subdir + "\\" + f.name
+                    size += os.path.getsize(fp) #суммирование размеров всех файлов
+            return size
+
+    def exists(path):
+        return os.path.exists(path)
+
+    def read(path, seek, size):
+        f = open(path, "r")
+        f.seek(seek)
+        data = f.read(size)
+        f.close()
+        return data
+
+    def getAbsolutePath(path):
+        return os.path.abspath(path)
+    
+    def isDir(path):
+        return os.path.isdir(path)
+    
+    def isFile(path):
+        return os.path.isfile(path)
+    
+    def isCopy(path1, path2): #побайтово сравниваем содержание двух файлов, если они имеют одинаковые размеры
+        if file.exists(path1) and file.exists(path2):
+            result = False
+            if file.size(path1)==file.size(path2):
+                result = True
+                file1 = open(path1, "rb") #rb - read byte или read binary, то есть чтение по байтам
+                file2 = open(path2, "rb")
+                temp = file.size(path1)
+                while temp>0:
+                    if temp
+
+>> ")
+        print()
+        if command=="exit" or command=="stop":
+            run=False
+            print("Выход из программы SmartFileLinker...\n")
+            time.sleep(5)
+        elif command=="info":
+            print("Информация:")
+            print("    Версия: 1.0")
+            print("    Почта: n.mysin@list.ru")
+            print("    Задача:")
+            print("        Основной задачей данного проекта является оптимизация дискового пространства, методом замены копий файлов в указанной папке на их пути с учётом наименования в таблице ссылок. Файл таблицы ссылок создаётся с наименованием list.list в указанной для оптимизации папке. При восстановлении всех файлов файл таблицы ссылок автоматически удаляется.")
+        elif command=="instruction":
+            print("Инструкция:")
+            print("    После запуска программы пользователь, при необходимости, читает инструкцию и список команд, после чего работает в программе, вводя необходимые команды. Удалять файлы вручную из оптимизированной папки крайне не рекомендуется, так как существует вероятность удаления оригиналов файлов, после чего ссылки других оптимизированных файлов в этой папке перестанут быть действительными. При необходимости добавить, удалить, переименовать или перезаписать любой файл в оптимизируемой папке, рекомендуется деоптимизировать папку, произвести необходимые операции и снова оптимизировать папку.")
+        elif command=="eval":
+            eval(input("eval>>> "))
+        elif command=="system":
+            print(os.system(input("system>>> ")))
+        elif command=="setram":
+            file.memory = int(input("Введите размер буфера в байтах>>> "))
+        elif command=="getram":
+            print("Размер буфера в байтах "+str(file.memory))
+        elif command=="commands":
+            print("Список команд:")
+            print("exit - выход из программы")
+            print("stop - выход из программы")
+            print("commands - список всех команд")
+            print("info - информация о программе")
+            print("instruction - инструкция к программе")
+            print("eval - выполнение однострочной команды интерпретатором Python")
+            print("system - выполнение однострочной команды системой")
+            print("getram - вывести на экран размер буфера")
+            print("setram - установить размер буфера")
+            print("encode - оптимизировать папку")
+            print("decode - деоптимизировать папку")
+            print("iscopy - определение схожести двух файлов")
+            print("size - определение размера файла или папки")
+            print("exists - проверка файла или папки на существование")
+            print("isdir - проверка принадлежности указанного пути к папке")
+            print("isfile - проверка принадлежности указанного пути к файлу")
+            print("getabsolutepath - получение абсолютного пути к папке или файлу")
+            print("createfile - создать новый файл")
+            print("createdir - создать новую папку")
+            print("clear - очистить файл")
+            print("rewrite - перезаписать файл")
+            print("write - дозаписать данные в файл")
+            print("append - дозаписать данные в файл")
+            print("delete - удалить файл или папку")
+            print("read - прочитать файл")
+            print("rename - переименовать файл или папку")
+            print("copy - скопировать файл или папку")
+            print("move - переместить файл или папку")
+            print("! - игнорирование следующего сообщения")
+        elif command=="encode":
+            path = input("Введите путь к папке>>> ")
+            if file.exists(path):
+                if file.isDir(path):
+                    print("Начало оптимизации...")
+                    firstsize = file.size(path)
+                    file.encode(path)
+                    secondsize = file.size(path)
+                    print("Оптимизация успешно завершена!")
+                    print("Начальный размер папки " + str(firstsize))
+                    print("Конечный размер папки " + str(secondsize))
+                else:
+                    print("Путь указывает на файл, а нужно указать папку!")
+            else:
+                print("Такой папки не существует!")
+        elif command=="decode":
+            path = input("Введите путь к папке>>> ")
+            if file.exists(path):
+                if file.isDir(path):
+                    if (file.exists(path+"\\list.list")):
+                        print("Файл таблицы ссылок list.list найден!")
+                        print("Начало деоптимизации...")
+                        firstsize = file.size(path)
+                        file.decode(path)
+                        secondsize = file.size(path)
+                        print("Деоптимизация успешно завершена!")
+                        print("Начальный размер папки " + str(firstsize))
+                        print("Конечный размер папки " + str(secondsize))
+                    else:
+                        print("Файл таблицы ссылок list.list не был найден, поэтому деоптимизация невозможна!")
+                else:
+                    print("Путь указывает на файл, а нужно указать папку!")
+            else:
+                print("Такой папки не существует!")
+        elif command=="iscopy":
+            path1 = input("Введите путь к первому файлу>>> ")
+            path2 = input("Введите путь ко второму файлу>>> ")
+            if file.exists(path1):
+                if file.exists(path2):
+                    if file.isFile(path1):
+                        if file.isFile(path2):
+                            if file.isCopy(path1, path2):
+                                print("Файлы являются точными копиями")
+                            else:
+                                print("Файлы не являются точными копиями")
+                        else:
+                            print("Второй путь ссылается на папку, а требуется указать файл!")
+                    else:
+                        print("Первый путь ссылается на папку, а требуется указать файл!")
+                else:
+                    print("Второй файл по указанному пути не был найден!")
+            else:
+                print("Первый файл по указанному пути не был найден!")
+        elif command=="size":
+            path = input("Введите путь к файлу>>> ")
+            if file.exists(path):
+                if file.isFile(path):
+                    print("Размер файла в байтах: " + str(file.size(path)))
+                else:
+                    print("Размер папки в байтах: " + str(file.size(path)))
+            else:
+                print("Путь указан не верно")
+        elif command=="exists":
+            path = input("Введите путь>>> ")
+            if file.exists(path):
+                if file.isFile(path):
+                    print("Файл успешно найден")
+                else:
+                    print("Папка успешно найдена")
+            else:
+                print("По указанному пути ничего не найдено")
+        elif command=="isdir":
+            path = input("Введите путь>>> ")
+            if file.exists(path):
+                if file.isDir(path):
+                    print("По указанному пути действительно находится папка")
+                else:
+                    print("По указанному пути находится не папка")
+            else:
+                print("По указанному пути ничего не найдено")
+        elif command=="isfile":
+            path = input("Введите путь>>> ")
+            if file.exists(path):
+                if file.isFile(path):
+                    print("По указанному пути действительно находится файл")
+                else:
+                    print("По указанному пути находится не файл")
+            else:
+                print("По указанному пути ничего не найдено")
+        elif command=="getabsolutepath":
+            path = input("Введите путь>>> ")
+            if file.exists(path):
+                if file.isFile(path):
+                    print("Абсолютный путь к файлу по указанному пути: " + file.getAbsolutePath(path))
+                else:
+                    print("Абсолютный путь к папке по указанному пути: " + file.getAbsolutePath(path))
+            else:
+                print("По указанному пути ничего не найдено")
+        elif command=="createfile":
+            file.createFile(input("Введите путь к файлу>>> "))
+            print("Файл успешно создан")
+        elif command=="createdir":
+            file.createDir(input("Введите путь к папке>>> "))
+            print("Папка успешно создана")
+        elif command=="clear":
+            path = input("Введите путь к файлу>>> ")
+            if file.exists(path):
+                if file.isFile(path):
+                    file.rewrite(path, "");
+                    print("Файл успешно очищен")
+                else:
+                    print("Путь ссылается на папку, а требуется указать файл!")
+            else:
+                print("Файл по указанному пути не был найден!")
+        elif command=="rewrite":
+            path = input("Введите путь к файлу>>> ")
+            if file.exists(path):
+                if file.isFile(path):
+                    file.rewrite(path, input("Введите сообщение>>> "));
+                    print("Файл успешно перезаписан!")
+                else:
+                    print("Путь ссылается на папку, а требуется указать файл!")
+            else:
+                print("Файл по указанному пути не был найден!")
+        elif command=="write" or command=="append":
+            path = input("Введите путь к файлу>>> ")
+            if file.exists(path):
+                if file.isFile(path):
+                    file.append(path, input("Введите сообщение>>> "));
+                    print("Данные успешно дозаписаны в файл!")
+                else:
+                    print("Путь ссылается на папку, а требуется указать файл!")
+            else:
+                print("Файл по указанному пути не был найден!")
+        elif command=="delete":
+            path = input("Введите путь>>> ")
+            if file.exists(path):
+                if file.isFile(path):
+                    file.delete(path)
+                    print("Файл по указанному пути успешно удалён!")
+                else:
+                    file.delete(path)
+                    print("Папка по указанному пути была успешно удалена со всем содержимым!")
+            else:
+                print("По указанному пути ничего не найдено")
+        elif command=="read":
+            path = input("Введите путь к файлу>>> ")
+            if file.exists(path):
+                if file.isFile(path):
+                    size = int(input("Введите, сколько символов нужно считать>>> "))
+                    seek = int(input("Введите, сколько символов пропустить перед считыванием>>> "))
+                    if size>-1:
+                        if seek>-1:
+                            if size<=file.size(path):
+                                if seek<=file.size(path):
+                                    if seek+size<=file.size(path):
+                                        print("Начало сообщения:")
+                                        print(file.read(path, seek, size))
+                                        print("Конец сообщения!")
+                                    else:
+                                        print("Область считывания выходит за границы файла!")
+                                else:
+                                    print("Нельзя пропустить количество байтов, большее размера файла")
+                            else:
+                                print("Нельзя считать количество байтов, большее размера файла")
+                        else:
+                            print("Нельзя пропустить отрицательное количество байтов!")
+                    else:
+                        print("Нельзя считать отрицательное количество байтов!")
+                else:
+                    print("Путь ссылается на папку, а требуется указать файл!")
+            else:
+                print("Файл по указанному пути не был найден!")
+        elif command=="rename":
+            path = input("Введите путь>>> ")
+            if file.exists(path):
+                if file.isFile(path):
+                    file.rename(path, input("Введите путь к файлу с новым наименованием>>> "))
+                    print("Файл был успешно переименован!")
+                else:
+                    file.rename(path, input("Введите путь к папке с новым наименованием>>> "))
+                    print("Папка была успешно переименована!")
+            else:
+                print("По указанному пути ничего не найдено!")
+        elif command=="copy":
+            path = input("Введите путь>>> ")
+            if file.exists(path):
+                if file.isFile(path):
+                    file.copy(path, input("Введите, куда скопировать файл>>> "))
+                    print("Файл был успешно скопирован!")
+                else:
+                    file.copy(path, input("Введите, куда скопировать папку>>> "))
+                    print("Папка была успешно скопирована!")
+            else:
+                print("По указанному пути ничего не найдено!")
+        elif command=="move":
+            path = input("Введите путь>>> ")
+            if file.exists(path):
+                if file.isFile(path):
+                    file.move(path, input("Введите, куда переместить файл>>> "))
+                    print("Файл был успешно перемещён!")
+                else:
+                    file.move(path, input("Введите, куда переместить папку>>> "))
+                    print("Папка была успешно перемещена!")
+            else:
+                print("По указанному пути ничего не найдено!")
+        elif command=="":
+            print()
+        elif command=="!":
+            input("\n>>> ");
+            print()
+        else:
+            print ("Вы ввели неизвестную команду!")
+        
+def main(): #для собственного понимания всего происходящего создаём главный метод main
+    interface()
+
+main() #запуск главного метода main
